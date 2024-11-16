@@ -4,12 +4,14 @@ import (
 	"net/http"
 
 	"github.com/Temutjin2k/doodocs_Challange/internal/handler"
+	"github.com/Temutjin2k/doodocs_Challange/internal/logger"
 	"github.com/Temutjin2k/doodocs_Challange/internal/middleware"
 	"github.com/Temutjin2k/doodocs_Challange/internal/service"
 )
 
 func InitServer() http.Handler {
-	mux := http.NewServeMux()
+	// Logger
+	logger := logger.InitLogger()
 
 	// Services
 	archServ := service.NewArchiveService()
@@ -20,11 +22,13 @@ func InitServer() http.Handler {
 	mailHandler := handler.NewMailHandler(mailServ)
 
 	// Routes
-	mux.HandleFunc("/api/archive/information", archHandler.ArchiveInformationHandler)
-	mux.HandleFunc("/api/archive/files", archHandler.ArchiveFilesHandler)
-	mux.HandleFunc("/api/mail/file", mailHandler.SendMailHandler)
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("POST /api/archive/information", archHandler.ArchiveInformationHandler)
+	mux.HandleFunc("POST /api/archive/files", archHandler.ArchiveFilesHandler)
+	mux.HandleFunc("POST /api/mail/file", mailHandler.SendMailHandler)
 
 	// Wrap the router with middlewares
-	router := middleware.LoggingMiddleware(mux)
+	router := middleware.LoggingMiddleware(mux, logger)
 	return router
 }

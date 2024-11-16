@@ -2,9 +2,9 @@ package models
 
 type ArchiveFile struct {
 	Filename     string  `json:"filename"`
-	Archive_size float32 `json:"archive_size"`
-	Totalsize    float32 `json:"total_size"`
-	Total_files  float32 `json:"total_files"`
+	Archive_size float64 `json:"archive_size"`
+	Totalsize    float64 `json:"total_size"`
+	Total_files  int     `json:"total_files"`
 	Files        []File  `json:"files"`
 }
 

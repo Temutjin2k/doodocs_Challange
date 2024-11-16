@@ -1,16 +1,13 @@
 package middleware
 
 import (
+	"log/slog"
 	"net/http"
 	"time"
-
-	"github.com/Temutjin2k/doodocs_Challange/internal/logger"
 )
 
 // LoggingMiddleware logs HTTP requests and responses.
-func LoggingMiddleware(next http.Handler) http.Handler {
-	logger := logger.InitLogger()
-
+func LoggingMiddleware(next http.Handler, logger *slog.Logger) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 

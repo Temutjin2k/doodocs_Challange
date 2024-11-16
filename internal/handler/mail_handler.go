@@ -15,5 +15,4 @@ func NewMailHandler(mailService service.MailServiceImpl) *mailHandler {
 }
 
 func (h *mailHandler) SendMailHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(500)
 }
