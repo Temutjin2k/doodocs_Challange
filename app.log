@@ -1,0 +1,12 @@
+time=2024-11-16T16:02:01.377+05:00 level=INFO msg="Request received" method=POST path=/api/archive/information ip=127.0.0.1:54702
+time=2024-11-16T16:02:01.378+05:00 level=INFO msg="Request processed" method=POST path=/api/archive/information status=0 duration=159.212µs
+time=2024-11-16T16:03:25.202+05:00 level=INFO msg="Request received" method=POST path=/api/archive/information ip=127.0.0.1:54706
+time=2024-11-16T16:03:25.202+05:00 level=INFO msg="Request processed" method=POST path=/api/archive/information status=0 duration=0
+time=2024-11-16T16:03:50.513+05:00 level=INFO msg="Request received" method=POST path=/api/archive/information ip=127.0.0.1:54708
+time=2024-11-16T16:03:50.513+05:00 level=INFO msg="Request processed" method=POST path=/api/archive/information status=0 duration=119
+time=2024-11-16T16:05:59.162+05:00 level=INFO msg="Request received" method=POST path=/api/mail/file ip=127.0.0.1:54708
+time=2024-11-16T16:05:59.162+05:00 level=INFO msg="Request processed" method=POST path=/api/mail/file status=0 duration=263
+time=2024-11-16T16:06:06.357+05:00 level=INFO msg="Request received" method=POST path=/api/mail/file ip=127.0.0.1:54712
+time=2024-11-16T16:06:06.357+05:00 level=INFO msg="Request processed" method=POST path=/api/mail/file status=500 duration=102.851µs
+time=2024-11-16T16:07:52.313+05:00 level=INFO msg="Request received" method=POST path=/api/mail/file ip=127.0.0.1:54714
+time=2024-11-16T16:07:52.314+05:00 level=INFO msg="Request processed" method=POST path=/api/mail/file status=500 duration=108.109µs
