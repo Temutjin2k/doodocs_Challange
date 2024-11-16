@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/Temutjin2k/doodocs_Challange/internal/handler"
 	"github.com/Temutjin2k/doodocs_Challange/internal/logger"
@@ -15,7 +16,16 @@ func InitServer() http.Handler {
 
 	// Services
 	archServ := service.NewArchiveService()
-	mailServ := service.NewMailService()
+
+	smtpHost := os.Getenv("SMTP_HOST")
+	smtpPort := os.Getenv("SMTP_PORT")
+	email := os.Getenv("EMAIL")
+	password := os.Getenv("PASSWORD")
+	mailServ, err := service.NewMailService(smtpHost, smtpPort, email, password)
+	if err != nil {
+		logger.Error("Mail Service creating", "Error", err)
+		os.Exit(1)
+	}
 
 	// Handlers
 	archHandler := handler.NewArchiveHandler(archServ)
