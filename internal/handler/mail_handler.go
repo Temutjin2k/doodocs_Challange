@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"net/mail"
 
+	"github.com/Temutjin2k/doodocs_Challange/config"
 	"github.com/Temutjin2k/doodocs_Challange/internal/service"
-	"github.com/Temutjin2k/doodocs_Challange/utils"
 )
 
 type mailHandler struct {
@@ -30,7 +30,7 @@ func (h *mailHandler) SendMailHandler(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	mimeType := r.MultipartForm.File["file"][0].Header.Get("Content-Type")
-	if !utils.IsValidMimeType(mimeType) {
+	if config.AvailiableMimeTypesToArvhive[mimeType] {
 		h.logger.Error("Invalid MimeType type", "Error", err)
 		SendError(w, fmt.Sprintf("Invalid MimeType: %v", mimeType), http.StatusBadRequest)
 		return

@@ -38,7 +38,8 @@ func InitServer() http.Handler {
 	mux.HandleFunc("POST /api/mail/file", mailHandler.SendMailHandler)
 
 	// Wrap the router with middlewares
-	router := middleware.LoggingMiddleware(mux, logger)
+	router := middleware.RecoverMiddleware(mux, logger)
+	router = middleware.LoggingMiddleware(router, logger)
 	logger.Info(`Starting server`)
 	return router
 }
