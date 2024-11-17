@@ -19,6 +19,9 @@ func LoggingMiddleware(next http.Handler, logger *slog.Logger) http.Handler {
 		next.ServeHTTP(responseWriter, r)
 
 		// Log request processing time and response status
+		if responseWriter.status == 0 {
+			responseWriter.status = 200
+		}
 		logger.Info("Request processed", "method", r.Method, "path", r.URL.Path, "status", responseWriter.status, "duration", time.Since(start))
 	})
 }

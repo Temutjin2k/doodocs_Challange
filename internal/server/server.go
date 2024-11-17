@@ -13,7 +13,6 @@ import (
 func InitServer() http.Handler {
 	// Logger
 	logger := logger.InitLogger()
-
 	// Services
 	archServ := service.NewArchiveService()
 
@@ -23,13 +22,13 @@ func InitServer() http.Handler {
 	password := os.Getenv("PASSWORD")
 	mailServ, err := service.NewMailService(smtpHost, smtpPort, email, password)
 	if err != nil {
-		logger.Error("Mail Service creating", "Error", err)
+		logger.Error("Error creating Mail Service", "Error", err)
 		os.Exit(1)
 	}
 
 	// Handlers
-	archHandler := handler.NewArchiveHandler(archServ)
-	mailHandler := handler.NewMailHandler(mailServ)
+	archHandler := handler.NewArchiveHandler(archServ, logger)
+	mailHandler := handler.NewMailHandler(mailServ, logger)
 
 	// Routes
 	mux := http.NewServeMux()
@@ -40,5 +39,6 @@ func InitServer() http.Handler {
 
 	// Wrap the router with middlewares
 	router := middleware.LoggingMiddleware(mux, logger)
+	logger.Info(`Starting server`)
 	return router
 }
