@@ -70,7 +70,7 @@ func (h *archiveHandler) ArchiveFilesHandler(w http.ResponseWriter, r *http.Requ
 
 	for _, fileHeader := range files {
 		// Validate for MimeType
-		if config.AvailibleMimeTypesToArvhive[fileHeader.Header.Get("Content-Type")] {
+		if config.AvailiableMimeTypesToArvhive[fileHeader.Header.Get("Content-Type")] {
 		}
 
 		file, err := fileHeader.Open()
