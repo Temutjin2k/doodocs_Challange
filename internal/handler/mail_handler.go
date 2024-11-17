@@ -24,45 +24,45 @@ func (h *mailHandler) SendMailHandler(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("file")
 	if err != nil {
 		h.logger.Error("Unable to get file from form", "Error", err)
-		http.Error(w, "Unable to get file from form", http.StatusBadRequest)
+		SendError(w, "Unable to retrieve the file or the file not provided", http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
 
-	if !utils.IsValidMimeType(r.MultipartForm.File["file"][0]) {
+	mimeType := r.MultipartForm.File["file"][0].Header.Get("Content-Type")
+	if !utils.IsValidMimeType(mimeType) {
 		h.logger.Error("Invalid MimeType type", "Error", err)
-		http.Error(w, "Invalid MimeType type", http.StatusBadRequest)
+		SendError(w, fmt.Sprintf("Invalid MimeType: %v", mimeType), http.StatusBadRequest)
 		return
 	}
 
 	fileData, err := io.ReadAll(file)
 	if err != nil {
 		h.logger.Error("Unable to read file", "Error", err)
-		http.Error(w, "Unable to read file", http.StatusInternalServerError)
+		SendError(w, "Unable to read file", http.StatusInternalServerError)
 		return
 	}
 
 	// Getting list of mails to send the file
-	emails := r.MultipartForm.Value
+	emails := r.MultipartForm.Value["emails"]
 
 	// Validate email addresses
-	h.logger.Info("Validating emails from request")
-
-	emailList := []string{}
-	for _, email := range emails["emails"] {
+	h.logger.Info("Validating emails from request", "number", len(emails), "emails", emails)
+	var emailList []string
+	for _, email := range emails {
 		if _, err := mail.ParseAddress(email); err != nil {
 			h.logger.Error("Invalid email address", "email", email, "Error", err)
-			http.Error(w, fmt.Sprintf("Invalid email address: %s", email), http.StatusBadRequest)
+			SendError(w, fmt.Sprintf("Invalid email address: %s", email), http.StatusBadRequest)
 			return
 		}
 		emailList = append(emailList, email)
 	}
-	h.logger.Info("Mails validated successful", "number", len(emailList), "emails", emailList)
+	h.logger.Info("Mails validated successfully", "number", len(emailList), "emails", emailList)
 
 	err = h.mailService.SendFile(emailList, header.Filename, header.Header.Get("Content-Type"), fileData)
 	if err != nil {
 		h.logger.Error("Error sending emails", "Error", err)
-		http.Error(w, "Error sending emails", http.StatusInternalServerError)
+		SendError(w, "Error sending emails", http.StatusInternalServerError)
 		return
 	}
 }

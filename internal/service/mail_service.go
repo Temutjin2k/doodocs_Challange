@@ -41,6 +41,7 @@ func NewMailService(smtpHost, smtpPort, email, password string) (*mailService, e
 	}, nil
 }
 
+// Sends a file to all given emails
 func (s *mailService) SendFile(mails []string, filename, mimeType string, filedata []byte) error {
 	m := mail.NewMessage()
 
@@ -62,7 +63,7 @@ func (s *mailService) SendFile(mails []string, filename, mimeType string, fileda
 		}),
 	)
 
-	// Send the email
+	// Sending the email
 	if err := s.dialer.DialAndSend(m); err != nil {
 		return fmt.Errorf("failed to send email: %v", err)
 	}

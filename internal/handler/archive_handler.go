@@ -24,7 +24,7 @@ func (h *archiveHandler) ArchiveInformationHandler(w http.ResponseWriter, r *htt
 	file, header, err := r.FormFile("file")
 	if err != nil {
 		h.logger.Error("Unable to retrieve file from request", "Error", err)
-		http.Error(w, "Unable to retrieve file", http.StatusBadRequest)
+		SendError(w, "Unable to retrieve file or file not provided", http.StatusBadRequest)
 		return
 	}
 	defer file.Close()
@@ -33,12 +33,15 @@ func (h *archiveHandler) ArchiveInformationHandler(w http.ResponseWriter, r *htt
 	archiveInfo, err := h.archiveService.Info(file, header)
 	if err != nil {
 		h.logger.Error("Info service error", "Error", err)
-		http.Error(w, "Info service error", http.StatusBadRequest)
+		SendError(w, "Info service error", http.StatusBadRequest)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(archiveInfo)
+	err = json.NewEncoder(w).Encode(archiveInfo)
+	if err != nil {
+		SendError(w, "Could not encode the reponse", http.StatusInternalServerError)
+	}
 }
 
 func (h *archiveHandler) ArchiveFilesHandler(w http.ResponseWriter, r *http.Request) {
