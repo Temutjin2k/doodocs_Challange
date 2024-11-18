@@ -19,8 +19,8 @@ var (
 		"image/png":       true,
 	}
 
-	MaxInfoArchiveSize int64 = 10 << 30 // 10 GB
-	MaxArchivingSize   int64 = 1 << 30  // 1 GB
+	MaxInfoArchiveSize int64 = 100 * (1 << 20) // 100 mb
+	MaxArchivingSize   int64 = 100 * (1 << 20) // 100 mb
 )
 
 func LoadEnvVariables() {
