@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Temutjin2k/doodocs_Challange/config"
+	"github.com/Temutjin2k/doodocs_Challange/internal/config"
 	"github.com/Temutjin2k/doodocs_Challange/internal/server"
 )
 

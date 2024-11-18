@@ -8,7 +8,7 @@ import (
 
 var (
 	AvailiableMimeTypesToSendEmail = map[string]bool{
-		"application/vnd.openxmlformats - officedocument.wordprocessingml.document": true,
+		"application/vnd.openxmlformats-officedocument.wordprocessingml.document": true,
 		"application/pdf": true,
 	}
 
