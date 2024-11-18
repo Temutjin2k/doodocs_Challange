@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -9,8 +11,13 @@ import (
 )
 
 func main() {
+	portFlag := flag.Int("port", 8080, "Port number")
+	flag.Parse()
+
+	port := fmt.Sprintf(":%d", *portFlag)
+
 	config.LoadEnvVariables()
 	router := server.InitServer()
-	log.Println("Starting server on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Println("Starting server on port" + port)
+	log.Fatal(http.ListenAndServe(port, router))
 }

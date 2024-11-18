@@ -75,7 +75,7 @@ func (s *archiveService) Info(file multipart.File, header *multipart.FileHeader)
 
 func (s *archiveService) ArchiveFiles(files []*multipart.FileHeader) ([]byte, error) {
 	if len(files) == 0 {
-		return []byte{}, errors.New("no file to archvie")
+		return []byte{}, errors.New("no file to archive")
 	}
 
 	var buf bytes.Buffer
