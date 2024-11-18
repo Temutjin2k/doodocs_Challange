@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 
+	"github.com/Temutjin2k/doodocs_Challange/internal/config"
 	"github.com/Temutjin2k/doodocs_Challange/internal/service"
 )
 
@@ -21,13 +22,6 @@ func NewArchiveHandler(archiveService service.ArchiveImpl, logger *slog.Logger) 
 }
 
 func (h *archiveHandler) ArchiveInformationHandler(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseMultipartForm(1 << 30) // 1 GB
-	if err != nil {
-		h.logger.Error("Could not parse MultipartForm", "Error", err)
-		SendError(w, "Could not parse form data", http.StatusBadRequest)
-		return
-	}
-
 	file, header, err := r.FormFile("file")
 	if err != nil {
 		h.logger.Error("Could not retrieve file from request", "Error", err)
@@ -36,23 +30,30 @@ func (h *archiveHandler) ArchiveInformationHandler(w http.ResponseWriter, r *htt
 	}
 	defer file.Close()
 
+	if header.Size > config.MaxInfoArchiveSize {
+		h.logger.Error("Too large file", "Filename", header.Filename, "Size", header.Size)
+		SendError(w, "Could not get information from archive. File size is too large", http.StatusBadRequest)
+		return
+	}
+
 	h.logger.Info("Calling info method from archive service")
 	archiveInfo, err := h.archiveService.Info(file, header)
 	if err != nil {
 		h.logger.Error("Info service error", "Error", err)
-		SendError(w, "Info service error", http.StatusBadRequest)
+		SendError(w, "Could not get information from archive", http.StatusBadRequest)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(archiveInfo)
 	if err != nil {
+		h.logger.Error("Could not encode the reponse", "Error", err)
 		SendError(w, "Could not encode the reponse", http.StatusInternalServerError)
 	}
 }
 
 func (h *archiveHandler) ArchiveFilesHandler(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseMultipartForm(1 << 30) // 1 GB
+	err := r.ParseMultipartForm(config.MaxArchivingSize) // 10 GB
 	if err != nil {
 		h.logger.Error("Could not parse MultipartForm", "Error", err)
 		SendError(w, "Could not parse form data", http.StatusBadRequest)

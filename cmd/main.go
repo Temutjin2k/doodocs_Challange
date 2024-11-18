@@ -16,6 +16,8 @@ func main() {
 
 	port := fmt.Sprintf(":%d", *portFlag)
 
+	// t.CreateLargeZip("test/data/large.zip", 5, 2<<25)
+	// fmt.Println("End")
 	config.LoadEnvVariables()
 	router := server.InitServer()
 	log.Println("Starting server on port" + port)
